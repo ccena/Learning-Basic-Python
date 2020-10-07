@@ -1,3 +1,2 @@
 # Learning-Basic-Python
-# Although experienced in MATLAB, I'm now more interested in learning Python.
-# Here are the practice codes and exercises from the book "Fundamentals of Python Programming" by Richard Halterman.
+# This is intended to share some of the basic ideas in Python Programming. Here are the practice codes and exercises from the book "Fundamentals of Python Programming" by Richard Halterman (2019).
