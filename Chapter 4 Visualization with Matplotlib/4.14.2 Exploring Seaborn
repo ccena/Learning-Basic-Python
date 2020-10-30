@@ -1,0 +1,95 @@
+# -*- coding: utf-8 -*-
+"""
+The main idea of Seaborn is that it provides high-level commands to create a 
+variety of plot types useful for statistical data exploration, and even 
+some statistical model fitting.
+"""
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+plt.style.use('classic')
+import numpy as np
+import pandas as pd
+
+
+# Histograms, KDE, and densities
+
+# using matplot lib to create histograms
+data = np.random.multivariate_normal([0, 0], [[5, 2], [2, 2]], size=2000)
+data = pd.DataFrame(data, columns=['x', 'y'])
+for col in 'xy':
+    plt.hist(data[col], density=True, alpha=0.5)
+plt.title("Histograms for visualizing distributions")
+
+# Kernel density estimation with sns.kdeplot
+plt.figure()
+for col in 'xy':
+    sns.kdeplot(data[col], shade=True)
+plt.title("Kernel density estimates for visualizing distributions")
+
+# Histograms and KDE can be combined using distplot
+plt.figure()
+sns.distplot(data['x'])
+sns.distplot(data['y']);
+plt.title("Kernel density and histograms plotted together")
+
+# two-dimensional visualization of the data
+plt.figure()
+sns.kdeplot(data['x'], data['y']);
+plt.title("A two-dimensional kernel density plot")
+
+# joint distribution and the marginal distributions using sns.jointplot
+plt.figure()
+with sns.axes_style('white'):
+    sns.jointplot("x", "y", data, kind='kde');
+
+# joint distribution nd the marginal distributions with hexagonally 'hex' based
+# histogram
+plt.figure()
+with sns.axes_style('white'):
+    sns.jointplot("x", "y", data, kind='hex')
+
+# A pair plot shows the relationships between four variables
+plt.figure()
+iris = sns.load_dataset("iris")
+iris.head()
+sns.pairplot(iris, hue='species', height=2.5);
+
+
+# Faceted histograms
+plt.figure()
+tips = sns.load_dataset('tips')
+tips.head()
+tips['tip_pct'] = 100 * tips['tip'] / tips['total_bill']
+grid = sns.FacetGrid(tips, row="sex", col="time", margin_titles=True)
+grid.map(plt.hist, "tip_pct", bins=np.linspace(0, 40, 15));
+
+# Factor plots allows viewing of the distribution of a parameter within bins 
+# defined by any other parameter
+plt.figure()
+with sns.axes_style(style='ticks'):
+    g = sns.factorplot("day", "total_bill", "sex", data=tips, kind="box")
+    g.set_axis_labels("Day", "Total Bill");
+
+# Joint distributions
+plt.figure()
+with sns.axes_style('white'):
+    sns.jointplot("total_bill", "tip", data=tips, kind='hex')
+    
+# Joint plot can do automatic kernel density estimation and regression
+sns.jointplot("total_bill", "tip", data=tips, kind='reg');
+
+
+# Bar plots
+# Time series can be plotted with sns.factorplot
+planets = sns.load_dataset('planets')
+planets.head()
+with sns.axes_style('white'):
+    g = sns.factorplot("year", data=planets, aspect=2,
+                       kind="count", color='steelblue')
+g.set_xticklabels(step=5)
+
+with sns.axes_style('white'):
+    g = sns.factorplot("year", data=planets, aspect=4.0, kind='count',
+                       hue='method', order=range(2001, 2015))
+g.set_ylabels('Number of Planets Discovered')
